@@ -26,6 +26,7 @@ const (
 	maxPages       = 10
 	perPage        = 100
 	reposURL       = "https://api.github.com/orgs/%s/repos"
+	programTimeout = 30 * time.Minute
 )
 
 func main() {
@@ -40,7 +41,7 @@ func main() {
 	}
 
 	start := time.Now()
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), programTimeout)
 	defer cancel()
 
 	reposData, err := fetchReposData(ctx, org, githubToken)
