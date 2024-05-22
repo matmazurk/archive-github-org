@@ -197,7 +197,7 @@ func storeReposResponses(wg *sync.WaitGroup, reposData []*MinimalRepository, dir
 	go func() {
 		defer wg.Done()
 		fmt.Println("saving fetched repositories responses to file...")
-		j, err := json.Marshal(reposData)
+		j, err := json.MarshalIndent(reposData, "", "  ")
 		if err != nil {
 			panic("could not marshal repos:" + err.Error())
 		}
@@ -232,7 +232,7 @@ func fetchReposData(ctx context.Context, org string, githubToken string) ([]*Min
 			q.Set("page", strconv.Itoa(i))
 			r.URL.RawQuery = q.Encode()
 
-			fmt.Printf("fetching %d batch\n", i)
+			fmt.Printf("fetching %d. batch\n", i)
 			resp, err := client.Do(r)
 			if err != nil {
 				return nil, errors.Wrap(err, "could not do the request")
@@ -249,7 +249,7 @@ func fetchReposData(ctx context.Context, org string, githubToken string) ([]*Min
 			}
 			resp.Body.Close()
 
-			fmt.Printf("fetched %d batch with %d repos\n", i, len(respStr))
+			fmt.Printf("fetched %d. batch with %d repos\n", i, len(respStr))
 			repos = append(repos, respStr...)
 			if len(respStr) < perPage {
 				return repos, nil
