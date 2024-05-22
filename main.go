@@ -149,10 +149,11 @@ func fillZipWriter(dirFilename string, w *zip.Writer) error {
 }
 
 func cloneRepos(ctx context.Context, wg *sync.WaitGroup, dirFilename string, githubToken string, reposData []*MinimalRepository) {
-	work := make(chan string, 1)
+	work := make(chan string)
 
 	for i := range cloningWorkers {
 		wg.Add(1)
+		i := i
 		go func() {
 			defer wg.Done()
 			fmt.Printf("starting worker %d\n", i)
